@@ -45,7 +45,6 @@ class Visitors extends React.Component{
             <div> Hallo
                 <h3>Graph 01</h3>
                 <div className="bottom-right-svg">
-                  <Fairway data={this.state.data}/>
                 </div>
             </div>
         )
