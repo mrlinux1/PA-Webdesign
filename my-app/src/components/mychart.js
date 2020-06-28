@@ -31,6 +31,13 @@ function MyChart() {
       []
     )
   
+    const series = React.useMemo(
+      () => ({
+        type: 'bar'
+      }),
+      []
+    )
+
     const axes = React.useMemo(
       () => [
         { primary: true, type: 'linear', position: 'bottom' },
@@ -46,7 +53,7 @@ function MyChart() {
           height: '300px',
         }}
       >
-        <Chart data={data} axes={axes} />
+        <Chart data={data}  series={series} axes={axes} />
       </div>
     )
   }

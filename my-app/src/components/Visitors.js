@@ -1,6 +1,8 @@
 import React from 'react';
 import Papa from 'papaparse';
-import Fairway  from 'fairway';
+//import Fairway  from 'fairway';
+import Chart from 'react-charts'
+
 
 class Visitors extends React.Component{
 
@@ -12,17 +14,17 @@ class Visitors extends React.Component{
 
             data: []
         }
+        this.data = [];
 
         this.updateData = this.updateData.bind(this);
     }
 
   componentWillMount() {
-        //var csvFilePath = "./drinks.csv";
-
         Papa.parse(`${process.env.PUBLIC_URL}/drinks.csv`, {
           header: true,
           download: true,
           skipEmptyLines: true,
+          preview: 0,
           complete: this.updateData
         });
   }
@@ -30,9 +32,10 @@ class Visitors extends React.Component{
   updateData(result) {
     const data = result.data;
    
-    alert( JSON.stringify(result.data));
-    
-    this.setState({data: data}); 
+    //alert( JSON.stringify(result.data));
+    //alert(Object.keys(result.data).length);
+   
+    this.data = data; 
 
   }
 
@@ -45,6 +48,9 @@ class Visitors extends React.Component{
             <div> Hallo
                 <h3>Graph 01</h3>
                 <div className="bottom-right-svg">
+                    
+                <Chart data={this.data} />
+                    
                 </div>
             </div>
         )
