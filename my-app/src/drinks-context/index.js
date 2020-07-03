@@ -11,14 +11,12 @@ export function loadDrinksData () {
 export const DrinksContext = createContext()
 
 export function DrinksProvider (props) {
-    const [getDrinksData, setDrinksData] = useState(
-        [ 
-    ])
+    const [getDrinksData, setDrinksData] = useState([]);
+
     useEffect(() => {
-        loadDrinksData().then((drinks) => {
-            setDrinksData(drinks)
-        })
-    })
+        loadDrinksData().then((drinks) => {setDrinksData(drinks)});
+        console.log(getDrinksData)
+    },[])
     return (
         <DrinksContext.Provider value={[getDrinksData,setDrinksData]}>
             {props.children}
