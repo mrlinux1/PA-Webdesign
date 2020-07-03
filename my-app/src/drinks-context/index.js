@@ -15,7 +15,6 @@ export function DrinksProvider (props) {
 
     useEffect(() => {
         loadDrinksData().then((drinks) => {setDrinksData(drinks)});
-        console.log(getDrinksData)
     },[])
     return (
         <DrinksContext.Provider value={[getDrinksData,setDrinksData]}>
