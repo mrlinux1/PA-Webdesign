@@ -1,14 +1,16 @@
 import React from 'react';
 import './App.css';
-import HomepageImage from './components/HomepageImage'
-import Visitors from './components/Visitors'
+//import HomepageImage from './components/HomepageImage'
+//import Visitors from './components/drinks-old'
+import {DrinksProvider} from './drinks-context'
+import Dummy from './Dummy'
 
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <HomepageImage />
+        
         <p>
           My first React website!
         </p>
@@ -19,7 +21,11 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
+          
         </a>
+        <DrinksProvider>
+          <Dummy />
+        </DrinksProvider>
       </header>
     </div>
     
