@@ -7,7 +7,8 @@ export default function Dummy() {
     
     
     return (<div><p>Land: {getDrinksData.beer_servings}</p>
-                <p>Length: {JSON.stringify(getDrinksData)}</p>
+                <p>Length: {JSON.stringify(getDrinksData[0])}</p>
+                <p>element: {JSON.stringify(getDrinksData[0])}</p>
          List:
         {getDrinksData.map((drinks,index) => (<p key={index}>{drinks.country} {drinks.beer_servings} {drinks.spirit_servings} {drinks.wine_servings} {drinks.total_litres_of_pure_alcohol}</p>))}
 </div>
