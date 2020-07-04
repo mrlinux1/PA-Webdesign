@@ -6,11 +6,11 @@ export default function Dummy() {
     const [getDrinksData, setDrinksData] = useContext(DrinksContext)
     
     
-    return (<h1><p>Land: {getDrinksData.beer_servings}</p>
+    return (<div><p>Land: {getDrinksData.beer_servings}</p>
                 <p>Length: {JSON.stringify(getDrinksData)}</p>
          List:
         {getDrinksData.map((drinks,index) => (<p key={index}>{drinks.country} {drinks.beer_servings} {drinks.spirit_servings} {drinks.wine_servings} {drinks.total_litres_of_pure_alcohol}</p>))}
-</h1>
+</div>
     
     )
 }
