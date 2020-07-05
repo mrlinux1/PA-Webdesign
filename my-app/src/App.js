@@ -4,6 +4,7 @@ import './App.css';
 //import Visitors from './components/drinks-old'
 import {DrinksProvider} from './drinks-context'
 import Dummy from './Dummy'
+import MyChart from './components/mychart';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         </a>
         <DrinksProvider>
           <Dummy />
+          <MyChart />
         </DrinksProvider>
       </header>
     </div>
