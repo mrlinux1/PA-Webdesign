@@ -36,12 +36,27 @@ function MyChart() {
       []
     )
   
-    const series = React.useMemo(
-      () => ({
-        type: 'bar'
+    // const series = React.useMemo(
+    //   () => ({
+    //     type: 'bar'
+    //   }),
+    //   []
+    // )
+    const series = React.useCallback(
+      (s, i) => ({
+        type:
+          i % 4 === 0
+            ? 'line'
+            : i % 3 === 0
+            ? 'line'
+            : i % 2 === 0
+            ? 'line'
+            : 'line'
       }),
       []
     )
+
+
 
     const axes = React.useMemo(
       () => [
