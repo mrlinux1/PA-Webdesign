@@ -9,29 +9,21 @@ function MyChart() {
     const data = React.useMemo(
       () => [
         {
-          label: 'Series 1',
           data: [
-            { x: 1, y: 10 },
-            { x: 2, y: 55 },
-            { x: 3, y: 20 },
+            { country: 'A', y: 10 },
           ],
         },
         {
-          label: 'Series 2',
           data: [
-            { x: 1, y: 5 },
-            { x: 2, y: 60 },
-            { x: 3, y: 10 },
+            { country: 'C', y: 30 },
           ],
         },
         {
-          label: 'Series 3',
           data: [
-            { x: 1, y: 20 },
-            { x: 2, y: 30 },
-            { x: 3, y: 5 },
+            { country: 'B', y: 15 },
           ],
         },
+
       ],
       []
     )
@@ -43,25 +35,25 @@ function MyChart() {
     //   []
     // )
     const series = React.useCallback(
-      (s, i) => ({
+      (i, s) => ({
+        
         type:
-          i % 4 === 0
-            ? 'line'
-            : i % 3 === 0
-            ? 'line'
-            : i % 2 === 0
-            ? 'line'
-            : 'line'
+          s % 4 === 0 ? 'bar'
+        : s % 3 === 0 ? 'bar'
+        : s % 2 === 0 ? 'bar'
+        : 'bar'
       }),
       []
     )
 
+    const getLabel = React.useCallback(series => series.data.country, [])
 
+    const getDatums = React.useCallback(series => series.data.country, [])
 
     const axes = React.useMemo(
       () => [
-        { primary: true, type: 'ordinal', position: 'left' },
-        { type: 'linear', position: 'bottom', stacked: true },
+        { primary: true, type: 'ordinal', position: 'bottom' },
+        { type: 'linear', position: 'left', stacked: true },
       ],
       []
     )
@@ -73,7 +65,7 @@ function MyChart() {
           height: '300px',
         }}
       >
-        <Chart data={data}  series={series} axes={axes} />
+        <Chart data={data}  getLabel={getLabel} getData={getDatums} series={series} axes={axes} />
       </div>
     )
   }
