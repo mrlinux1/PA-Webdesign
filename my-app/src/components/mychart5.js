@@ -2,100 +2,178 @@ import React, {useContext} from 'react'
 import {DrinksContext} from '../drinks-context'
 import { Chart } from 'react-charts';
 
+function CustomTooltip({ getStyle, primaryAxis, datum }) {
+    const data = React.useMemo(
+      () =>
+        datum
+          ? [
+              {
+                data: datum.group.map(d => ({
+                  primary: d.series.label,
+                  secondary: d.secondary,
+                  color: getStyle(d).fill
+                }))
+              }
+            ]
+          : [],
+      [datum, getStyle]
+    )
+    return datum ? (
+      <div
+        style={{
+          color: 'white',
+          pointerEvents: 'none'
+        }}
+      >
+        <h3
+          style={{
+            display: 'block',
+            textAlign: 'center'
+          }}
+        >
+          {primaryAxis.format(datum.primary)}
+        </h3>
+        <div
+          style={{
+            width: '300px',
+            height: '200px',
+            display: 'flex'
+          }}
+        >
+          <Chart
+            data={data}
+            dark
+            series={{ type: 'bar' }}
+            axes={[
+              {
+                primary: true,
+                position: 'bottom',
+                type: 'ordinal'
+              },
+              {
+                position: 'left',
+                type: 'linear'
+              }
+            ]}
+            getDatumStyle={datum => ({
+              color: datum.originalDatum.color
+            })}
+            primaryCursor={{
+              value: datum.seriesLabel
+            }}
+          />
+        </div>
+      </div>
+    ) : null
+  }
 
 function MyChart5() {
     // Use any data object you want
+    const [getDrinksData, setDrinksData] = useContext(DrinksContext)  
+    const newdata = {}
+
+
+    newdata.xaxis = getDrinksData.map((drinks,index) => {
+      return drinks.country
+    });
+    newdata.yaxis = ["Beer","Wine", "Spirit", "Alcohol"];
+    newdata.beer = getDrinksData.map((drinks,index) => {return drinks.beer_servings}).map((num) => {
+      return parseInt(num,10);
+    });
+    newdata.wine = getDrinksData.map((drinks,index) => {return drinks.wine_servings}).map((num) => {
+      return parseInt(num,10);
+    });
+    newdata.spirit = getDrinksData.map((drinks,index) => {return drinks.spirit_servings}).map((num) => {
+      return parseInt(num,10);
+    });
+    newdata.alcohol = getDrinksData.map((drinks,index) => {return drinks.total_litres_of_pure_alcohol}).map((num) => {
+      return parseInt(num,10);
+    });
+   
+/*     console.log("###############", newdata.xaxis)
+console.log("###############", newdata.beer)
+
+ */
+
     const originalData = React.useMemo(
       () => ({
-        //axis: ["A", "B", "C"],
+        xaxis: newdata.xaxis,
+        yaxis: ["beer", "wine", "spirit", "litres alcohol"],
         lines: [
-          { data: [{ value: 1 }, { value: 5 }, { value: 10 }], label: "A" },
-          { data: [{ value: 20 }, { value: 30 }, { value: 40 }],  label: "B" },
-          { data: [{ value: 7 }, { value: 23 }, { value: 50 }],  label: "C" },
+        //   { data: [{ value: 1 }, { value: 5 }, { value: 10 }] },
+        //   { data: [{ value: 4 }, { value: 14 }, { value: 24 }] },
+        //   { data: [{ value: 6 }, { value: 12 }, { value: 18 }] },
+        //   { data: [{ value: 6 }, { value: 12 }, { value: 18 }] },
+        { data: newdata.beer, label: "beer" },
+        { data: newdata.wine, label: "wine"},
+        { data: newdata.spirit, label: "spirit"},
+        { data: newdata.alcohol, label: "alcohol"},
         ],
       }),
-      []
+      [newdata.xaxis, newdata.beer ]
     )
-    // originalData.lines[1].data[2].value = 40
-    // originalData.lines[1].label = "B"
-/*
-    const originalData = React.useMemo(
-      () => (
-          [
-              {country: "A", beer: 5, wine: 7, spirit: 4},
-              {country: "A", beer: 5, wine: 7, spirit: 4},
-              {country: "A", beer: 5, wine: 7, spirit: 4},
-              {country: "A", beer: 5, wine: 7, spirit: 4},
-          ]
-      ),
-      []
-    )
-
-
-*/
-
-
+  
     // Make data.lines represent the different series
     const data = React.useMemo(data => originalData.lines, [originalData])
-
-    // const data = React.useMemo(data => originalData, [originalData])
   
-    const getSeries = React.useCallback(data => data.data, [])
-    //const getSeries = React.useCallback((datum, i, series, seriesIndex, data) => data[i], []) 
-
-
     // Use data.lines[n].data to represent the different datums for each series
     const getDatums = React.useCallback(series => series.data, [])
-    //    const getDatums = React.useCallback(series => [series.beer, series.wine, series.spirit], [])
+  
     // Use the original data object and the datum index to reference the datum's primary value.
     const getPrimary = React.useCallback(
-      (datum, i, series, seriesIndex, data) => data[i].label,[])
-    // (datum, i, series, seriesIndex, data) => data[i].country,[])
-    
+      (datum, i, series, seriesIndex, data) => originalData.xaxis[i],
+      [originalData.xaxis]
+    ) 
+  
+    // Use data.lines[n].data[n].value as each datums secondary value
+    const getSecondary = React.useCallback( (datum, i, series, seriesIndex, data)=> originalData.lines[seriesIndex].data[i], [originalData.lines])
 
     const axes = React.useMemo(
         () => [
-          { primary: true, type: 'ordinal', position: 'bottom' },
-          { type: 'linear', position: 'left', stacked: true },
+          { primary: true, type: 'ordinal', position: 'left' },
+          { type: 'linear', position: 'bottom', stacked: true},
         ],
         []
       )
       const series = React.useCallback(
-        (i, s) => ({
+        () => ({
           
-          type:
-            s % 4 === 0 ? 'bar'
-          : s % 3 === 0 ? 'bar'
-          : s % 2 === 0 ? 'bar'
-          : 'bar'
+          type: 'bar'
         }),
         []
       )
   
-      const getLabel = React.useCallback(data => data.label, [])
+      const tooltip = React.useMemo(
+        () => ({
+          render: ({ datum, primaryAxis, getStyle }) => {
+            return <CustomTooltip {...{ getStyle, primaryAxis, datum }} />
+          }
+        }),
+        []
+      )
 
-    // Use data.lines[n].data[n].value as each datums secondary value
-    const getSecondary = React.useCallback(datum => datum.value, [])
-  
+
     return (
       <div
         style={{
-          width: '400px',
-          height: '300px',
+          width: '1280px',
+          height: '4096px',
         }}
       >
         <Chart
           data={data}
-          getSeries={getSeries}
+          //getSeries={getSeries}
           getDatums={getDatums}
           getPrimary={getPrimary}
           getSecondary={getSecondary}
-          //getLabel={getLabel}
           series={series}
           axes={axes}
+          primaryCursor
+          tooltip={tooltip}
         />
       </div>
     )
   }
 
+  
   export default MyChart5;
