@@ -1,6 +1,8 @@
 import React, {useContext} from 'react'
 import {DrinksContext} from '../drinks-context'
 import { Chart } from 'react-charts';
+import useChartConfig from '../hooks/useChartConfig'
+import Box from '../components/box'
 
 function CustomTooltip({ getStyle, primaryAxis, datum }) {
     const data = React.useMemo(
@@ -69,68 +71,60 @@ function CustomTooltip({ getStyle, primaryAxis, datum }) {
 
 function MyChart5() {
     // Use any data object you want
-    const [getDrinksData, setDrinksData] = useContext(DrinksContext)  
+    const [getDrinksData] = useContext(DrinksContext)  
     const newdata = {}
+    getDrinksData.splice(5,187)
 
+    let i=0;
+    let maxlength=0;
 
-    newdata.xaxis = getDrinksData.map((drinks,index) => {
-      return drinks.country
-    });
-    newdata.yaxis = ["Beer","Wine", "Spirit", "Alcohol"];
-    newdata.beer = getDrinksData.map((drinks,index) => {return drinks.beer_servings}).map((num) => {
-      return parseInt(num,10);
-    });
-    newdata.wine = getDrinksData.map((drinks,index) => {return drinks.wine_servings}).map((num) => {
-      return parseInt(num,10);
-    });
-    newdata.spirit = getDrinksData.map((drinks,index) => {return drinks.spirit_servings}).map((num) => {
-      return parseInt(num,10);
-    });
-    newdata.alcohol = getDrinksData.map((drinks,index) => {return drinks.total_litres_of_pure_alcohol}).map((num) => {
-      return parseInt(num,10);
-    });
+    const country = getDrinksData.map((drinks,index) => {return drinks.country})
+    for (i = 0; i < country.length; i++) {
+      if(country[i].length > maxlength) { maxlength = country[i].length};
+    } 
+    //                " ".repeat(10)
+    //console.log("##maxlength##",maxlength)
+    newdata.beer = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.beer_servings,10), r: undefined}})
+    newdata.wine = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.wine_servings,10), r: undefined}})
+    newdata.spirit = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.spirit_servings,10), r: undefined}})
+    newdata.alcohol = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.total_litres_of_pure_alcohol,10), r: undefined}})
    
-/*     console.log("###############", newdata.xaxis)
-console.log("###############", newdata.beer)
+    console.log("####### CSV ########", getDrinksData[1])
 
- */
-
-    const originalData = React.useMemo(
-      () => ({
-        xaxis: newdata.xaxis,
-        yaxis: ["beer", "wine", "spirit", "litres alcohol"],
-        lines: [
-        //   { data: [{ value: 1 }, { value: 5 }, { value: 10 }] },
-        //   { data: [{ value: 4 }, { value: 14 }, { value: 24 }] },
-        //   { data: [{ value: 6 }, { value: 12 }, { value: 18 }] },
-        //   { data: [{ value: 6 }, { value: 12 }, { value: 18 }] },
-        { data: newdata.beer, label: "beer" },
-        { data: newdata.wine, label: "wine"},
-        { data: newdata.spirit, label: "spirit"},
-        { data: newdata.alcohol, label: "alcohol"},
-        ],
-      }),
-      [newdata.xaxis, newdata.beer ]
+    const mydata = React.useMemo(
+      () => ([
+        { label: "beer", datums: newdata.beer  },
+        { label: "wine", datums: newdata.wine },
+        { label: "spirit", datums: newdata.spirit },
+        { label: "alcohol", datums: newdata.alcohol },
+        ])
+      ,
+      [newdata.beer, newdata.wine, newdata.spirit, newdata.alcohol ]
     )
-  
-    // Make data.lines represent the different series
-    const data = React.useMemo(data => originalData.lines, [originalData])
-  
-    // Use data.lines[n].data to represent the different datums for each series
-    const getDatums = React.useCallback(series => series.data, [])
-  
-    // Use the original data object and the datum index to reference the datum's primary value.
-    const getPrimary = React.useCallback(
-      (datum, i, series, seriesIndex, data) => originalData.xaxis[i],
-      [originalData.xaxis]
-    ) 
-  
-    // Use data.lines[n].data[n].value as each datums secondary value
-    const getSecondary = React.useCallback( (datum, i, series, seriesIndex, data)=> originalData.lines[seriesIndex].data[i], [originalData.lines])
+    //console.log("###### mydata #########", mydata)
+    console.log("###### mydata #########", mydata)
+  //  console.log("###### mydata #########", mydata[0].datums)
+  //  console.log("###### mydata #########", mydata[0].datums[0])
+    //console.log("###### mydata #########", mydata[0].datums[0].x)
+   const { data, randomizeData } = useChartConfig({
+      series: 4,
+      datums: 5,
+      dataType: 'ordinal'
+    })
 
-    const axes = React.useMemo(
+    console.log("###### data   #########", data)
+
+    const getPrimary = React.useCallback(
+
+      (datum, i, series, seriesIndex, data) => mydata[seriesIndex].datums[i].x,
+      [mydata]
+ 
+    )
+
+
+       const axes = React.useMemo(
         () => [
-          { primary: true, type: 'ordinal', position: 'left' },
+          { primary: true, type: 'ordinal', position: 'left'},
           { type: 'linear', position: 'bottom', stacked: true},
         ],
         []
@@ -152,28 +146,46 @@ console.log("###############", newdata.beer)
         []
       )
 
-
     return (
       <div
         style={{
-          width: '1280px',
-          height: '4096px',
+          width: '1920px',
+          height: '1024px',
         }}
       >
+        <Box>
         <Chart
-          data={data}
-          //getSeries={getSeries}
-          getDatums={getDatums}
-          getPrimary={getPrimary}
-          getSecondary={getSecondary}
+          data={mydata}
           series={series}
+          getprimary={getPrimary}
           axes={axes}
-          primaryCursor
+          
           tooltip={tooltip}
         />
+       </Box>
+       <button onClick={randomizeData}>Randomize Data</button>
+      <br />
+      <br />
+      <Box>
+        <Chart data={data} series={series} axes={axes} tooltip={tooltip}/>
+      </Box>
+      
+
       </div>
+
     )
   }
 
   
   export default MyChart5;
+
+  /*
+        <div>
+      <button onClick={randomizeData}>Randomize Data</button>
+      <br />
+      <br />
+      <Box>
+        <Chart data={exdata} series={series} axes={axes}/>
+      </Box>
+      </div>
+  */
