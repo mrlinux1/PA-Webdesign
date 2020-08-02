@@ -112,6 +112,7 @@ function MyChart5() {
       dataType: 'ordinal'
     })
 
+    data[0].datums[0].x = "Afghanistan"
     console.log("###### data   #########", data)
 
     const getPrimary = React.useCallback(

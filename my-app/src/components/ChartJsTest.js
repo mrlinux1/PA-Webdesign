@@ -14,7 +14,7 @@ export default function ChartJsTest() {
     // var datatoshow = 5     
     // getDrinksData.splice(datatoshow,getDrinksData.length-datatoshow)
 
-    //getDrinksData.sort(function(a,b) { return(parseInt(b.total_litres_of_pure_alcohol,10) - parseInt(a.total_litres_of_pure_alcohol,10))})
+    getDrinksData.sort(function(a,b) { return(parseInt(b.beer_servings,10) - parseInt(a.beer_servings,10))})
  
    const arbitraryStackKey ='stack'
    const data = React.useMemo(() => ({
@@ -45,7 +45,7 @@ export default function ChartJsTest() {
           }
           ,
           {
-            stack: arbitraryStackKey,
+            //stack: arbitraryStackKey,
             label: 'total litres of pure alcohol',
             data: extractLiterAlcohol(getDrinksData),
             backgroundColor: 'rgba(0,255,0,1.0)',
@@ -55,7 +55,7 @@ export default function ChartJsTest() {
     }),[getDrinksData]);
 
   // const legendOpts = {
-  //   onClick: (e, legendItem) => {
+  //   onClick: (e, legendItem,legend) => {
   //     const index = legendItem.datasetIndex;
   //     const ci = legend.chart;
   //     if (ci.isDatasetVisible(index)) {
@@ -69,6 +69,6 @@ export default function ChartJsTest() {
   // };
   
 
-return  <HorizontalBar data={data} width='100' height='4000'
+return  <HorizontalBar data={data} width={100} height={4000} /* legend={legendOpts} */
     options={{ maintainAspectRatio: false }} />
 }

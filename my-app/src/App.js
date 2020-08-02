@@ -18,8 +18,8 @@ function App() {
         <DrinksProvider>
           <ChartJsTest />
          </DrinksProvider>
-      
-    </div>
+         </div>
+
   </div>    
   );
 }
