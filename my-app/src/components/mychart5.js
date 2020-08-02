@@ -72,7 +72,7 @@ function CustomTooltip({ getStyle, primaryAxis, datum }) {
 function MyChart5() {
     // Use any data object you want
     const [getDrinksData] = useContext(DrinksContext)  
-    const newdata = {}
+    let newdata = {}
     getDrinksData.splice(5,187)
 
     let i=0;
@@ -89,7 +89,7 @@ function MyChart5() {
     newdata.spirit = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.spirit_servings,10), r: undefined}})
     newdata.alcohol = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.total_litres_of_pure_alcohol,10), r: undefined}})
    
-    console.log("####### CSV ########", getDrinksData[1])
+    console.log("####### CSV ########", getDrinksData)
 
     const mydata = React.useMemo(
       () => ([
@@ -157,7 +157,6 @@ function MyChart5() {
         <Chart
           data={mydata}
           series={series}
-          getprimary={getPrimary}
           axes={axes}
           
           tooltip={tooltip}

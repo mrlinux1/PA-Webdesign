@@ -1,47 +1,74 @@
 import React, {useContext}from 'react'
-import {Bar} from 'react-chartjs-2'
+import {HorizontalBar} from 'react-chartjs-2'
 import {DrinksContext} from '../drinks-context'
+import {
+  extractBeerServings,
+  extractWineServings,
+  extractSpiritServings,
+  extractLiterAlcohol,
+  extractCountry
+} from '../charthelper'
 
 export default function ChartJsTest() {
-    const [getDrinksData] = useContext(DrinksContext)  
-    const newdata = {}
-    getDrinksData.splice(5,187)
+    const [getDrinksData] = useContext(DrinksContext)
+    // var datatoshow = 5     
+    // getDrinksData.splice(datatoshow,getDrinksData.length-datatoshow)
 
-    let i=0;
-    let maxlength=0;
+    //getDrinksData.sort(function(a,b) { return(parseInt(b.total_litres_of_pure_alcohol,10) - parseInt(a.total_litres_of_pure_alcohol,10))})
+ 
+   const arbitraryStackKey ='stack'
+   const data = React.useMemo(() => ({
+        labels: extractCountry(getDrinksData),
+        datasets: [
+          {
+            stack: arbitraryStackKey,
+            label: 'beer',
+            data: extractBeerServings(getDrinksData),
+            backgroundColor: 'rgba(0,0,255,1.0)',
+            borderColor: 'rgba(0,0,255,1.0)'
+          }
+          ,
+          {
+            stack: arbitraryStackKey,
+            label: 'wine',
+            data: extractWineServings(getDrinksData),
+            backgroundColor: 'rgba(255,0,0,1.0)',
+            borderColor: 'rgba(255,0,0,1.0)'
+          }
+          ,
+          {
+            stack: arbitraryStackKey,
+            label: 'spirit',
+            data: extractSpiritServings(getDrinksData),
+            backgroundColor: 'rgba(255,200,0,1.0)',
+            borderColor: 'rgba(255,200,0,1.0)'
+          }
+          ,
+          {
+            stack: arbitraryStackKey,
+            label: 'total litres of pure alcohol',
+            data: extractLiterAlcohol(getDrinksData),
+            backgroundColor: 'rgba(0,255,0,1.0)',
+            borderColor: 'rgba(0,255,0,1.0)'
+          }
+      ]
+    }),[getDrinksData]);
 
-    const country = getDrinksData.map((drinks,index) => {return drinks.country})
-    for (i = 0; i < country.length; i++) {
-      if(country[i].length > maxlength) { maxlength = country[i].length};
-    } 
-    //                " ".repeat(10)
-    console.log("##maxlength##",maxlength)
-    newdata.beer = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.beer_servings,10), r: undefined}})
-    newdata.wine = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.wine_servings,10), r: undefined}})
-    newdata.spirit = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.spirit_servings,10), r: undefined}})
-    newdata.alcohol = getDrinksData.map((drinks,index) => {return {x: drinks.country, y: parseInt(drinks.total_litres_of_pure_alcohol,10), r: undefined}})
+  // const legendOpts = {
+  //   onClick: (e, legendItem) => {
+  //     const index = legendItem.datasetIndex;
+  //     const ci = legend.chart;
+  //     if (ci.isDatasetVisible(index)) {
+  //       ci.hide(index);
+  //       legendItem.hidden = true;
+  //     } else {
+  //       ci.show(index);
+  //       legendItem.hidden = false;
+  //     }
+  //   },
+  // };
+  
 
-    newdata.data = getDrinksData.map((drinks,index) => {return drinks.beer_servings})
-    
-
-
-    console.log("####### CSV ########", getDrinksData)
-
-    const mydata = React.useMemo(
-      () => ([
-        { datums: newdata.beer, label: "beer" },
-        { datums: newdata.wine, label: "wine"},
-        { datums: newdata.spirit, label: "spirit"},
-        { datums: newdata.alcohol, label: "alcohol"},
-        ]
-      ),
-      [newdata.beer, newdata.wine, newdata.spirit, newdata.alcohol ]
-    )
-    console.log("###### mydata #########", mydata)
-
-
-
-
-
-    return  <Bar data={newdata.data}/>
+return  <HorizontalBar data={data} width='100' height='4000'
+    options={{ maintainAspectRatio: false }} />
 }

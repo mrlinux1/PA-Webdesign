@@ -9,6 +9,7 @@
     "c3": "^0.7.18",
     "chart": "^0.1.2",
     "chart.js": "^2.9.3",
+    "chartjs-plugin-stacked100": "^0.7.1",
     "csv-parse": "^4.10.1",
     "csv-parser": "^2.3.3",
     "fairway": "^1.0.0",
