@@ -4,7 +4,7 @@ import './App.css';
 //import Visitors from './components/drinks-old'
 import {DrinksProvider} from './drinks-context'
 //import Dummy from './Dummy'
-//import MyChart5 from './components/mychart5';
+import MyChart5 from './components/mychart5';
 import ChartJsTest from './components/ChartJsTest';
 //import ChartJsTest from './components/ChartJsTest';
 //import MyChart8 from './components/mychart8';
@@ -19,7 +19,12 @@ function App() {
           <ChartJsTest />
          </DrinksProvider>
          </div>
-
+{/*          <div>
+        <DrinksProvider>
+          <MyChart5 />
+         </DrinksProvider>
+         </div>
+ */}
   </div>    
   );
 }

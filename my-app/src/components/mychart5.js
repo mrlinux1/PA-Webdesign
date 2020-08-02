@@ -115,12 +115,12 @@ function MyChart5() {
     data[0].datums[0].x = "Afghanistan"
     console.log("###### data   #########", data)
 
-    const getPrimary = React.useCallback(
+    // const getPrimary = React.useCallback(
 
-      (datum, i, series, seriesIndex, data) => mydata[seriesIndex].datums[i].x,
-      [mydata]
+    //   (datum, i, series, seriesIndex, data) => mydata[seriesIndex].datums[i].x,
+    //   [mydata]
  
-    )
+    // )
 
 
        const axes = React.useMemo(
